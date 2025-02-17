@@ -22,13 +22,13 @@ else:
 
 def _execute_command(cmd):
     # Handle paths with spaces for Windows
-    if is_windows:
+
         # If the command contains a path with spaces, ensure it's properly quoted
-        parts = cmd.split()
-        for i, part in enumerate(parts):
-            if os.path.sep in part and ' ' in part and not (part.startswith('"') and part.endswith('"')):
-                parts[i] = f'"{part}"'
-        cmd = ' '.join(parts)
+    parts = cmd.split()
+    for i, part in enumerate(parts):
+        if os.path.sep in part and ' ' in part and not (part.startswith('"') and part.endswith('"')):
+            parts[i] = f'"{part}"'
+    cmd = ' '.join(parts)
     print(cmd)    
     line = shlex.split(cmd, posix=not is_windows)
     print(line)
