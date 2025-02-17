@@ -29,9 +29,9 @@ def _execute_command(cmd):
             if os.path.sep in part and ' ' in part and not (part.startswith('"') and part.endswith('"')):
                 parts[i] = f'"{part}"'
         cmd = ' '.join(parts)
-        
+    print(cmd)    
     line = shlex.split(cmd, posix=not is_windows)
-
+    print(line)
     print('Executing: {}'.format(cmd))
 
     # call instead of Popen to get realtime output
