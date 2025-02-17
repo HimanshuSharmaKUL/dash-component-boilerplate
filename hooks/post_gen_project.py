@@ -11,6 +11,8 @@ install_deps = '{{cookiecutter.install_dependencies}}'
 project_shortname = '{{cookiecutter.project_shortname}}'
 use_async = '{{cookiecutter.use_async}}'
 
+def quote_path(path: str) -> str:
+    return shlex.quote(path)
 
 is_windows = sys.platform == 'win32'
 
@@ -24,14 +26,14 @@ def _execute_command(cmd):
     # Handle paths with spaces for Windows
 
         # If the command contains a path with spaces, ensure it's properly quoted
-    parts = cmd.split()
-    for i, part in enumerate(parts):
-        if os.path.sep in part and ' ' in part and not (part.startswith('"') and part.endswith('"')):
-            parts[i] = f'"{part}"'
-    cmd = ' '.join(parts)
-    print(cmd)    
+    # parts = cmd.split()
+    # for i, part in enumerate(parts):
+    #     if os.path.sep in part and ' ' in part and not (part.startswith('"') and part.endswith('"')):
+    #         parts[i] = f'"{part}"'
+    # cmd = ' '.join(parts)
+    # print(cmd)    
     line = shlex.split(cmd, posix=not is_windows)
-    print(line)
+    # print(line)
     print('Executing: {}'.format(cmd))
 
     # call instead of Popen to get realtime output
@@ -69,7 +71,7 @@ if install_deps != 'True':
 
 # Create a virtual env
 if version.parse(sys.version.split()[0]) > version.parse('3.2'):
-    venv = '{} -m venv venv'.format(sys.executable)
+    venv = '{} -m venv venv'.format(quote_path(sys.executable))
 else:
     venv = 'virtualenv venv'
 
@@ -90,7 +92,7 @@ print('\n\nInstalling dependencies\n', file=sys.stderr)
 
 # Install Python requirements.
 _execute_command(
-    r'{} -m pip install -r requirements.txt'.format(python_executable)
+    r'{} -m pip install -r requirements.txt'.format(quote_path(python_executable))
 )
 
 # Install node_modules
@@ -113,7 +115,7 @@ _execute_command("{} -m dash.development.component_generator"
                  " -p package-info.json"
                  " --jl-prefix '{{ cookiecutter.jl_prefix }}'"
                  " --r-prefix '{{ cookiecutter.r_prefix }}'"
-                 .format(python_executable))
+                 .format(quote_path(python_executable)))
 
 print('\n{} ready!\n'.format(project_shortname))
 
