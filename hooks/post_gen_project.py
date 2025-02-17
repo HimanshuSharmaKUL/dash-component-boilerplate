@@ -5,6 +5,7 @@ import sys
 import os
 import shutil
 import subprocess
+from packaging import version
 
 install_deps = '{{cookiecutter.install_dependencies}}'
 project_shortname = '{{cookiecutter.project_shortname}}'
@@ -20,6 +21,15 @@ else:
 
 
 def _execute_command(cmd):
+    # Handle paths with spaces for Windows
+    if is_windows:
+        # If the command contains a path with spaces, ensure it's properly quoted
+        parts = cmd.split()
+        for i, part in enumerate(parts):
+            if os.path.sep in part and ' ' in part and not (part.startswith('"') and part.endswith('"')):
+                parts[i] = f'"{part}"'
+        cmd = ' '.join(parts)
+        
     line = shlex.split(cmd, posix=not is_windows)
 
     print('Executing: {}'.format(cmd))
@@ -58,7 +68,7 @@ if install_deps != 'True':
     sys.exit(0)
 
 # Create a virtual env
-if sys.version.split(' ')[0] > '3.2':
+if version.parse(sys.version.split()[0]) > version.parse('3.2'):
     venv = '{} -m venv venv'.format(sys.executable)
 else:
     venv = 'virtualenv venv'
