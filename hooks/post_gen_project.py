@@ -11,8 +11,12 @@ install_deps = '{{cookiecutter.install_dependencies}}'
 project_shortname = '{{cookiecutter.project_shortname}}'
 use_async = '{{cookiecutter.use_async}}'
 
+# def quote_path(path: str) -> str:
+#     return shlex.quote(path)
 def quote_path(path: str) -> str:
-    return shlex.quote(path)
+    if sys.platform == 'win32' and ' ' in path:
+        return f'"{path.strip(\'"\')}"'
+    return path
 
 is_windows = sys.platform == 'win32'
 
