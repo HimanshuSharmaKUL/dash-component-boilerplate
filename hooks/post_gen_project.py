@@ -14,9 +14,7 @@ use_async = '{{cookiecutter.use_async}}'
 # def quote_path(path: str) -> str:
 #     return shlex.quote(path)
 def quote_path(path: str) -> str:
-    if sys.platform == 'win32' and ' ' in path:
-        return f'"{path.strip(\'"\')}"'
-    return path
+    return f'"{path}"'
 
 is_windows = sys.platform == 'win32'
 
